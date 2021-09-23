@@ -2,7 +2,7 @@
 Sample script to run Telegram bot serverless in Google App Script.
 
 ### Setup
-  1. Go to script.google.com/start to open the script editor.
+  1. Go to [script.google.com/start](https://script.google.com/start) to open the script editor.
   1. Delete any code in the script editor and paste in the code.
   1. Create two (2) new Google Spreadsheet and DO NOT change anything in there.
   1. Replace the constants _tgBotToken_, _sheetID_, _loggerID_, _adminID_ (line 1-4) with your own.
@@ -16,7 +16,7 @@ Sample script to run Telegram bot serverless in Google App Script.
   1. Under Execute the app as, select your account.
   1. Under Who has access to the app, select "Anyone, even anonymous".
   1. Click Deploy.
-  1. Copy the URL labeled Current web app URL and ends with /exec
+  1. Copy the URL labeled Current web app URL and ends with /exec.
   1. Replace the constant _webAppURL_ in the script (need to do this on every new deploy).
   1. Run the _setWebHook_ function (need to do this on every new deploy).
   1. Run the _oneTimeSetup_ function (do this once only).
@@ -42,3 +42,8 @@ Sample script to run Telegram bot serverless in Google App Script.
   - getUserFullName()
   - getUsername()
   - getUserID()
+
+### Current bot commands
+  - /start
+  - /whoami
+  - /request
