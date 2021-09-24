@@ -47,3 +47,4 @@ Sample script to run Telegram bot serverless in Google App Script.
   - /start
   - /whoami
   - /request
+  - /rate
