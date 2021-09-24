@@ -99,6 +99,28 @@ function doPost(e) {
               "`Is bot    :` " + TelegramJSON.message.from.is_bot;
         Bot.sendMessage(msg, options);
       }
+      else if(text == '/rate') {
+        let options = {
+          'reply_markup': {
+            'keyboard': [
+              [ 
+                { 'text': '⭐️' }, 
+                { 'text': '⭐️⭐️' }
+              ],
+              [ 
+                { 'text': '⭐️⭐️⭐️' }, 
+                { 'text': '⭐️⭐️⭐️⭐️' }
+              ]
+            ],
+            'resize_keyboard': true,
+            'one_time_keyboard': true,
+            'input_field_placeholder': 'Gimme your stars...'
+          }
+        };
+
+        let msg = "How do you rate this bot?";
+        Bot.sendMessage(msg, options);
+      }
     }
 
     // coordinate/location
@@ -111,7 +133,13 @@ function doPost(e) {
 
     // normal message
     else if(Bot.isTextMessage()) {
-      Bot.sendChatAction('find_location');
+      let text = TelegramJSON.message.text;
+
+      if(text == '⭐️' || text == '⭐️⭐️' || text == '⭐️⭐️⭐️' || text == '⭐️⭐️⭐️⭐️') {
+        Bot.sendMessageKeyboardRemove('Thank you for the rating!');
+      }
+      else
+        Bot.sendChatAction('find_location');
 
     }
 
