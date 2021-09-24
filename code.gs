@@ -84,7 +84,7 @@ function doPost(e) {
             'inline_keyboard': [
               [ 
                 { 'text': 'Deny', 'callback_data': 'deny_' + Bot.getUserID() }, 
-                { 'text': 'Approve',  'callback_data': 'approve_' + Bot.getUserID() }
+                { 'text': 'Approve', 'callback_data': 'approve_' + Bot.getUserID() }
               ]
             ]
           }
@@ -99,6 +99,14 @@ function doPost(e) {
               "`Is bot    :` " + TelegramJSON.message.from.is_bot;
         Bot.sendMessage(msg, options);
       }
+    }
+
+    // coordinate/location
+    else if(Bot.isMap()) {
+      let lat  = TelegramJSON.message.location.latitude,
+          long = TelegramJSON.message.location.longitude;
+
+      Bot.sendVenue(lat, long, 'I am here', 'My location right here.');
     }
 
     // normal message
