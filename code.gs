@@ -15,6 +15,19 @@ const sheetNames = {
   'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth"],
   'tmp':["UserID", "Step", "Answers", "DateTime"]
 };
+  
+const threaded = [
+  { q: 'Berikan nama penuh anda.' },
+  { q: 'Apakah jantina anda?',
+    o: {'reply_markup': {'keyboard': [[{ 'text': 'Lelaki' }],[{ 'text': 'Perempuan' }]],'resize_keyboard': true,'one_time_keyboard': true,'input_field_placeholder': 'Lelaki atau perempuan?'}},
+    v: '^Lelaki$|^Perempuan$',
+    w: '_Tekan papan kekunci di bawah._' },
+  { q: 'Apakah nombor telefon bimbit anda?',
+    o: {'reply_markup': {'keyboard': [[{ 'text': 'Hantar nombor telefon bimbit', 'request_contact': true }]],'resize_keyboard': true,'one_time_keyboard': true,'input_field_placeholder': 'Nombor telefon bimbit.'}} },
+  { q: 'Masukkan nombor kad pengenalan.',
+    v: '^\\d{12}$',
+    w: '_Format nombor kad pengenalan tidak sah. Sila isi sekali lagi._'}
+];
 
 function setWebHook() {
   let payload = {
@@ -55,8 +68,27 @@ function doPost(e) {
 
     Logger.log(JSON.stringify(TelegramJSON));
 
+    let tc = Bot.userHasThreadedConversation();
+
+    // threaded conversation
+    if(tc.found) {
+      if(tc.step == threaded.length) {
+        let ans = Bot.endThreadedConversation(threaded,tc.step);
+
+        if(ans) {
+          // do processing here
+          Logger.log(ans);
+
+          let msg = "Data telah direkodkan. Terima kasih.";
+          Bot.sendMessageKeyboardRemove(msg);
+        }
+      }
+      else
+        Bot.nextMessageInThreadedConversation(threaded, tc.step);
+    }
+
     // command message
-    if(Bot.isBotCommand()) {
+    else if(Bot.isBotCommand()) {
       let text = TelegramJSON.message.text;
 
       if(text == '/start') {
@@ -121,6 +153,9 @@ function doPost(e) {
 
         let msg = "How do you rate this bot?";
         Bot.sendMessage(msg, options);
+      }
+      else if(text == '/ask') {
+        Bot.startThreadedConversation(threaded);
       }
     }
 
