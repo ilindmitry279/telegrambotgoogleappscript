@@ -18,8 +18,9 @@ Sample script to run Telegram bot serverless in Google App Script.
   1. Click Deploy.
   1. Copy the URL labeled Current web app URL and ends with /exec.
   1. Replace the constant _webAppURL_ in the script (need to do this on every new deploy).
-  1. Run the _setWebHook_ function (need to do this on every new deploy).
-  1. Run the _oneTimeSetup_ function (do this once only).
+  1. Run _setWebHook_ function (need to do this on every new deploy).
+  1. Run _oneTimeSetup_ function (do this once only).
+  1. Run _scheduler_ function (do this once only).
   1. Now your Telegram bot is up and running.
 
 ### Available functions in Nahfar library
@@ -48,3 +49,4 @@ Sample script to run Telegram bot serverless in Google App Script.
   - /whoami
   - /request
   - /rate
+  - /ask
