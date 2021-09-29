@@ -7,12 +7,13 @@ const webAppURL  = 'Your-Web-App-URL';
 // https://github.com/peterherrmann/BetterLog
 let Logger = BetterLog.useSpreadsheet(loggerID); 
 
-let Bot = Nahfar.createBot(tgBotToken);
 let SSA = SpreadsheetApp.openById(sheetID);
+let Bot = new Rafhan(tgBotToken, SSA);
+
 const sheetNames = {
-  'rawData': ["Datetime", "UserID", "No K/P", "No Telefon", "Verified?"],
-  'authUsers': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth"],
-  'newRecords':["UserID"]
+  'data': ["Datetime", "UserID", "Nama", "Jantina", "No Telefon", "No K/P", "Verified?"],
+  'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth"],
+  'tmp':["UserID", "Step", "Answers", "DateTime"]
 };
 
 function setWebHook() {
