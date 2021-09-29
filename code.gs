@@ -55,6 +55,10 @@ function oneTimeSetup() {
   Logger.log("One time setup is completed!");
 }
 
+function scheduler() {
+  ScriptApp.newTrigger('_scheduleClearTmp').timeBased().everyDays(1).atHour(4).nearMinute(0).inTimezone("Asia/Kuala_Lumpur").create();
+}
+
 function doGet(e) {
 
 }
@@ -216,5 +220,26 @@ function _removeEmptyColumns(sheetName) {
   if(maxColumns-lastColumn != 0) {
     activeSheet.deleteColumns(lastColumn+1, maxColumns-lastColumn);
   }
+}
+
+function _scheduleClearTmp() {
+  let activeSheet = SSA.getSheetByName('tmp');
+
+  let range = activeSheet.getDataRange();
+  let numRows = range.getNumRows();
+  let values = range.getValues();
+
+  let rem = 'X';
+
+  let rowsDeleted = 0;
+  for (let i = 0; i <= numRows - 1; i++) {
+    var row = values[i];
+    if (row[0] == rem || row[0] == '') {
+      activeSheet.deleteRow((parseInt(i)+1) - rowsDeleted);
+      rowsDeleted++;
+    }
+  }
+
+  Logger.log(`Successfully removed ${rowsDeleted} row(s)`);
 }
 /** Util - End */
