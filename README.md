@@ -19,8 +19,8 @@ Sample script to run Telegram bot serverless in Google App Script.
   1. Copy the URL labeled Current web app URL and ends with /exec.
   1. Replace the constant _webAppURL_ in the script (need to do this on every new deploy).
   1. Run _setWebHook_ function (need to do this on every new deploy).
-  1. Run _oneTimeSetup_ function (do this once only).
-  1. Run _scheduler_ function (do this once only).
+  1. Run _oneTimeSetup_ function (only do this once).
+  1. Run _scheduler_ function (only do this once).
   1. Now your Telegram bot is up and running.
 
 ### Available functions in Nahfar library
@@ -33,16 +33,22 @@ Sample script to run Telegram bot serverless in Google App Script.
   - sendVenue(latitude, longitude, title, address, options)
   - sendChatAction(action)
   - editMessageText(text, message_id, options)
-  - isTextMessage()
-  - isMap()
-  - isBotCommand()
-  - isCallbackQuery()
-  - mentionByID()
-  - getUserFirstName()
-  - getUserLastName()
-  - getUserFullName()
-  - getUsername()
-  - getUserID()
+  - isTextMessage() : boolean
+  - isMap() : boolean
+  - isContact() : boolean
+  - isBotCommand() : boolean
+  - isCallbackQuery() : boolean
+  - mentionByID() : string
+  - getUserFirstName() : string
+  - getUserLastName() : string
+  - getUserFullName() : string
+  - getUsername() : string
+  - getUserID() : number
+  - getTextMessage() : string
+  - startThreadedConversation(conversation_array)
+  - userHasThreadedConversation() : object {found : boolean, step : integer, answers : array}
+  - nextMessageInThreadedConversation(conversation_array, step)
+  - endThreadedConversation(conversation_array, step) : array
 
 ### Current bot commands
   - /start
