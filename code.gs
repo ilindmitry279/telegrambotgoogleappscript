@@ -8,7 +8,7 @@ const webAppURL  = 'Your-Web-App-URL';
 let Logger = BetterLog.useSpreadsheet(loggerID); 
 
 let SSA = SpreadsheetApp.openById(sheetID);
-let Bot = new Rafhan(tgBotToken, SSA);
+let Bot = Nahfar.createBot(tgBotToken, SSA);
 
 const sheetNames = {
   'data': ["Datetime", "UserID", "Nama", "Jantina", "No Telefon", "No K/P", "Verified?"],
