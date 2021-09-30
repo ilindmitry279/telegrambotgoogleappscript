@@ -168,7 +168,7 @@ function doPost(e) {
       let lat  = TelegramJSON.message.location.latitude,
           long = TelegramJSON.message.location.longitude;
 
-      Bot.sendVenue(lat, long, 'I am here', 'My location right here.');
+      Bot.sendVenue(lat, long, lat+','+long, 'My location right now.');
     }
 
     // normal message
