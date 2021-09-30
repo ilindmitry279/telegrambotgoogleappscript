@@ -111,7 +111,22 @@ function doPost(e) {
         Bot.sendMessage(msg);
       }
       else if(text == '/request') {
-        let msg = "Your request has been sent to the Admin.";
+        let a = Bot.getSystemUser();
+
+        if(a && typeof a[5].getMonth === 'function') {
+          let msg = "You already are an authorized user.";
+          Bot.sendMessage(msg);
+          return;
+        }
+        else if(a) {
+          let msg = "You have made a request before. Please wait for the admin to respon.";
+          Bot.sendMessage(msg);
+          return;
+        }
+
+        Bot.addSystemUser();
+
+        let msg = "Your request has been sent to the admin.";
         Bot.sendMessage(msg);
 
         // send request message to the admin
@@ -193,13 +208,23 @@ function doPost(e) {
       let cbdata = cb.data.split('_');
       let msg = '', msg2 = '';
 
+      if(Bot.isAuthSystemUser(cbdata[1])) {
+        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *completed* before by other admin.";
+        Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
+        return;
+      }
+
       if(cbdata[0] == 'approve') {
+        Bot.authSystemUser(cbdata[1], true);
+
         msg  = "_You have been authorized as Super User._";
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *approved*.";
+        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *approved* by you.";
       }
       else if(cbdata[0] == 'deny') {
+        Bot.authSystemUser(cbdata[1], false);
+
         msg  = "_Your request have been rejected!_";
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *rejected*.";
+        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *rejected* by you.";
       }
 
       Bot.sendMessage(msg, { chat_id: cbdata[1] });
