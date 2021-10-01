@@ -12,7 +12,7 @@ let Bot = Nahfar.createBot(tgBotToken, SSA);
 
 const sheetNames = {
   'data': ["Datetime", "UserID", "Nama", "Jantina", "No Telefon", "No K/P", "Verified?"],
-  'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth"],
+  'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth", "DatetimeAdmin"],
   'tmp':["UserID", "Step", "Answers", "DateTime"]
 };
   
@@ -113,7 +113,7 @@ function doPost(e) {
       else if(text == '/request') {
         let a = Bot.getSystemUser();
 
-        if(a && typeof a[5].getMonth === 'function') {
+        if(a && a.isAuth) {
           let msg = "You already are an authorized user.";
           Bot.sendMessage(msg);
           return;
