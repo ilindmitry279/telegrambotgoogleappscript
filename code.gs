@@ -212,7 +212,13 @@ function doPost(e) {
           let options = {
             'reply_markup': {
               'inline_keyboard': [
-                [ 
+                [
+                  { 'text': 'Cancel', 'callback_data': 'admin_cancel_' + exist.id },
+                ],
+                [
+                  { 'text': 'Remove this user', 'callback_data': 'admin_deny_' + exist.id },
+                ],
+                [
                   { 'text': msg, 'callback_data': action + exist.id }
                 ]
               ]
@@ -224,7 +230,7 @@ function doPost(e) {
                 "`Username  :` " + exist.username + "\n" +
                 "`First Name:` " + exist.firstName + "\n" +
                 "`Last Name :` " + exist.lastName + "\n" +
-                "`Is Admin? :` " + exist.isAdmin;
+                "`Is Admin? :` *" + exist.isAdmin + '*';
           Bot.sendMessage(msg, options);
         }
       }
@@ -280,7 +286,18 @@ function doPost(e) {
         }
       }
       else if(cbdata[0] == 'admin') {
-        if(cbdata[1] == 'promote') {
+        if(!(exist && exist.isAuth)) {
+          msg2 = "User [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") is not exist!";
+          Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
+          return;
+        }
+
+        if(cbdata[1] == 'cancel') {
+          msg2 = "This operation was canceled!";
+          Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
+          return;
+        }
+        else if(cbdata[1] == 'promote') {
           Bot.makeAdmin(cbdata[2], true);
 
           msg  = "_You have been promoted as an admin._";
@@ -291,6 +308,12 @@ function doPost(e) {
 
           msg  = "_You are no longer an admin. You are fired!_";
           msg2 = "User [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *demoted as an admin* by you.";
+        }
+        else if(cbdata[1] == 'deny') {
+          Bot.authSystemUser(cbdata[2], false);
+
+          msg  = "_Your have been banned!_";
+          msg2 = "User [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *banned* by you.";
         }
       }
 
