@@ -1,21 +1,20 @@
 const tgBotToken = 'Your-Telegram-Bot-Token-Goes-Here';
-const sheetID    = 'Your-Sheet-ID-Goes-Here';
-const loggerID   = 'Your-Logger-Sheet-ID-Goes-Here';
-const adminID    = 'Telegram-ID-Of-Admin';
+const botSheet   = 'Your-Bot-Sheet-ID-Goes-Here';
+const loggerSheet= 'Your-Logger-Sheet-ID-Goes-Here';
+const superAdmin = 'Telegram-ID-Of-Super-Admin';
 const webAppURL  = 'Your-Web-App-URL';
 
 // https://github.com/peterherrmann/BetterLog
-let Logger = BetterLog.useSpreadsheet(loggerID); 
+let Logger = BetterLog.useSpreadsheet(loggerSheet);
 
-let SSA = SpreadsheetApp.openById(sheetID);
+let SSA = SpreadsheetApp.openById(botSheet);
 let Bot = Nahfar.createBot(tgBotToken, SSA);
 
 const sheetNames = {
-  'data': ["Datetime", "UserID", "Nama", "Jantina", "No Telefon", "No K/P", "Verified?"],
   'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth", "DatetimeAdmin"],
   'tmp':["UserID", "Step", "Answers", "DateTime"]
 };
-  
+
 const threaded = [
   { q: 'Berikan nama penuh anda.' },
   { q: 'Apakah jantina anda?',
@@ -45,12 +44,12 @@ function oneTimeSetup() {
     if(activeSheet == null) {
       activeSheet = SSA.insertSheet().setName(key);
       activeSheet.appendRow(sheetNames[key]);
+      Logger.log(`Creating sheet ${key}...`);
     }
 
     _removeEmptyColumns(key);
     activeSheet.setFrozenRows(1);    
     activeSheet.getRange(1, 1, 1, activeSheet.getLastColumn()).setFontWeight("bold");
-    Logger.log(`Creating sheet ${key}...`);
   }
   Logger.log("One time setup is completed!");
 }
@@ -131,7 +130,7 @@ function doPost(e) {
 
         // send request message to the admin
         let options = {
-          'chat_id': adminID,
+          'chat_id': superAdmin,
           'reply_markup': {
             'inline_keyboard': [
               [ 
@@ -217,7 +216,7 @@ function doPost(e) {
       if(cbdata[0] == 'approve') {
         Bot.authSystemUser(cbdata[1], true);
 
-        msg  = "_You have been authorized as Super User._";
+        msg  = "_You have been authorized as a user of this bot._";
         msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *approved* by you.";
       }
       else if(cbdata[0] == 'deny') {
