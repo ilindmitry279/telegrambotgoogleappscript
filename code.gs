@@ -128,13 +128,15 @@ function doPost(e) {
         let msg = "Your request has been sent to the admin.";
         Bot.sendMessage(msg);
 
+        let sendTo = Bot.getAdminsID() || superAdmin;
+
         // send request message to the admin
         let options = {
-          'chat_id': superAdmin,
+          'chat_id': sendTo,
           'reply_markup': {
             'inline_keyboard': [
               [ 
-                { 'text': 'Deny', 'callback_data': 'deny_' + Bot.getUserID() }, 
+                { 'text': 'Deny', 'callback_data': 'deny_' + Bot.getUserID() },
                 { 'text': 'Approve', 'callback_data': 'approve_' + Bot.getUserID() }
               ]
             ]
