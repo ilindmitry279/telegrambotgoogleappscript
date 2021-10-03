@@ -1,7 +1,7 @@
 const tgBotToken = 'Your-Telegram-Bot-Token-Goes-Here';
 const botSheet   = 'Your-Bot-Sheet-ID-Goes-Here';
 const loggerSheet= 'Your-Logger-Sheet-ID-Goes-Here';
-const superAdmin = 'Telegram-ID-Of-Super-Admin';
+const superAdmin = ['Telegram-ID-Of-Super-Admin'];
 const webAppURL  = 'Your-Web-App-URL';
 
 // https://github.com/peterherrmann/BetterLog
@@ -128,29 +128,32 @@ function doPost(e) {
         let msg = "Your request has been sent to the admin.";
         Bot.sendMessage(msg);
 
+        // send request message to the admin
         let sendTo = Bot.getAdminsID() || superAdmin;
 
-        // send request message to the admin
-        let options = {
-          'chat_id': sendTo,
-          'reply_markup': {
-            'inline_keyboard': [
-              [ 
-                { 'text': 'Deny', 'callback_data': 'deny_' + Bot.getUserID() },
-                { 'text': 'Approve', 'callback_data': 'approve_' + Bot.getUserID() }
+        const len = sendTo.length;
+        for(let i = 0; i < len; i++) {
+          let options = {
+            'chat_id': sendTo[i],
+            'reply_markup': {
+              'inline_keyboard': [
+                [ 
+                  { 'text': 'Deny', 'callback_data': 'deny_' + Bot.getUserID() },
+                  { 'text': 'Approve', 'callback_data': 'approve_' + Bot.getUserID() }
+                ]
               ]
-            ]
-          }
-        };
+            }
+          };
 
-        msg = "This user request you permission\n\n" +
-              "`ID        :` [" + Bot.getUserID() + "](" + Bot.mentionByID() + ")\n" +
-              "`Username  :` " + Bot.getUsername() + "\n" +
-              "`First Name:` " + Bot.getUserFirstName() + "\n" +
-              "`Last Name :` " + Bot.getUserLastName() + "\n" +
-              "`Language  :` " + TelegramJSON.message.from.language_code + "\n" +
-              "`Is bot    :` " + TelegramJSON.message.from.is_bot;
-        Bot.sendMessage(msg, options);
+          msg = "This user request you permission\n\n" +
+                "`ID        :` [" + Bot.getUserID() + "](" + Bot.mentionByID() + ")\n" +
+                "`Username  :` " + Bot.getUsername() + "\n" +
+                "`First Name:` " + Bot.getUserFirstName() + "\n" +
+                "`Last Name :` " + Bot.getUserLastName() + "\n" +
+                "`Language  :` " + TelegramJSON.message.from.language_code + "\n" +
+                "`Is bot    :` " + TelegramJSON.message.from.is_bot;
+          Bot.sendMessage(msg, options);
+        }
       }
       else if(text == '/rate') {
         let options = {
