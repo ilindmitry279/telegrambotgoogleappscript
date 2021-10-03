@@ -138,8 +138,8 @@ function doPost(e) {
             'reply_markup': {
               'inline_keyboard': [
                 [ 
-                  { 'text': 'Deny', 'callback_data': 'deny_' + Bot.getUserID() },
-                  { 'text': 'Approve', 'callback_data': 'approve_' + Bot.getUserID() }
+                  { 'text': 'Deny', 'callback_data': 'user_deny_' + Bot.getUserID() },
+                  { 'text': 'Approve', 'callback_data': 'user_approve_' + Bot.getUserID() }
                 ]
               ]
             }
@@ -190,6 +190,46 @@ function doPost(e) {
       Bot.sendVenue(lat, long, lat+','+long, 'My location right now.');
     }
 
+    // forwarded message
+    else if(Bot.isForwardedFrom()) {
+      // only super admin can use this action
+      if(superAdmin.indexOf(Bot.getUserID()+'') > -1) {
+        let fwd = TelegramJSON.message.forward_from.id;
+
+        let exist = Bot.getSystemUser(fwd);
+        let action, msg;
+
+        if(exist && exist.isAdmin) {
+          action = 'admin_revoke_';
+          msg = 'Revoke admin privilege';
+        }
+        else if(exist && exist.isAuth) {
+          action = 'admin_promote_';
+          msg = 'Promote as an admin';
+        }
+
+        if(action) {
+          let options = {
+            'reply_markup': {
+              'inline_keyboard': [
+                [ 
+                  { 'text': msg, 'callback_data': action + exist.id }
+                ]
+              ]
+            }
+          };
+
+          msg = "Information about this user\n\n" +
+                "`ID        :` [" + exist.id + "](" + Bot.mentionByID(exist) + ")\n" +
+                "`Username  :` " + exist.username + "\n" +
+                "`First Name:` " + exist.firstName + "\n" +
+                "`Last Name :` " + exist.lastName + "\n" +
+                "`Is Admin? :` " + exist.isAdmin;
+          Bot.sendMessage(msg, options);
+        }
+      }
+    }
+
     // normal message
     else if(Bot.isTextMessage()) {
       let text = TelegramJSON.message.text;
@@ -206,39 +246,55 @@ function doPost(e) {
     else if(Bot.isCallbackQuery()) {
       Bot.request('answerCallbackQuery', { callback_query_id: TelegramJSON.callback_query.id,
                                            show_alert: true,
-                                           text: 'I will notify the requester. Thanks!' });
+                                           text: 'I will notify the user. Thanks!' });
 
       let cb = TelegramJSON.callback_query;
       let cbdata = cb.data.split('_');
       let msg = '', msg2 = '';
 
-      let exist = Bot.getSystemUser(cbdata[1]);
+      let exist = Bot.getSystemUser(cbdata[2]);
 
-      if(exist && exist.isAuth) {
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *approved* before by other admin.";
-        Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
-        return;
+      if(cbdata[0] == 'user') {
+        if(exist && exist.isAuth) {
+          msg2 = "Request from [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *approved* before by other admin.";
+          Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
+          return;
+        }
+        else if(!exist) {
+          msg2 = "Request from [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *denied* before by other admin.";
+          Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
+          return;
+        }
+
+        if(cbdata[1] == 'approve') {
+          Bot.authSystemUser(cbdata[2], true);
+
+          msg  = "_You have been authorized as a user of this bot._";
+          msg2 = "Request from [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *approved* by you.";
+        }
+        else if(cbdata[1] == 'deny') {
+          Bot.authSystemUser(cbdata[2], false);
+
+          msg  = "_Your request have been rejected!_";
+          msg2 = "Request from [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *rejected* by you.";
+        }
       }
-      else if(!exist) {
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *denied* before by other admin.";
-        Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
-        return;
+      else if(cbdata[0] == 'admin') {
+        if(cbdata[1] == 'promote') {
+          Bot.makeAdmin(cbdata[2], true);
+
+          msg  = "_You have been promoted as an admin._";
+          msg2 = "User [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *promoted as an admin* by you.";
+        }
+        else if(cbdata[1] == 'revoke') {
+          Bot.makeAdmin(cbdata[2], false);
+
+          msg  = "_You are no longer an admin. You are fired!_";
+          msg2 = "User [" + cbdata[2] + "](tg://user?id=" + cbdata[2] + ") was *demoted as an admin* by you.";
+        }
       }
 
-      if(cbdata[0] == 'approve') {
-        Bot.authSystemUser(cbdata[1], true);
-
-        msg  = "_You have been authorized as a user of this bot._";
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *approved* by you.";
-      }
-      else if(cbdata[0] == 'deny') {
-        Bot.authSystemUser(cbdata[1], false);
-
-        msg  = "_Your request have been rejected!_";
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *rejected* by you.";
-      }
-
-      Bot.sendMessage(msg, { chat_id: cbdata[1] });
+      Bot.sendMessage(msg, { chat_id: cbdata[2] });
 
       Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
     }
