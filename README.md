@@ -49,6 +49,7 @@ Sample script to run Telegram bot serverless in Google App Script.
   - userHasThreadedConversation() : object {found : boolean, step : integer, answers : array}
   - nextMessageInThreadedConversation(conversation_array, step)
   - endThreadedConversation(conversation_array, step) : array
+  - cancelThreadedConversation()
   - addSystemUser(tg_id, bool_auth, bool_admin)
   - getSystemUser(tg_id) : object {id : number, username : string, firstName : string, lastName : string, isAuth : boolean, isAdmin : boolean}
   - authSystemUser(tg_id, bool_auth, bool_admin) : boolean
