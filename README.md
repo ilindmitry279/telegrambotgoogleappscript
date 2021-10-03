@@ -38,6 +38,7 @@ Sample script to run Telegram bot serverless in Google App Script.
   - isContact() : boolean
   - isBotCommand() : boolean
   - isCallbackQuery() : boolean
+  - isForwardedFrom() : boolean
   - mentionByID() : string
   - getUserFirstName() : string
   - getUserLastName() : string
