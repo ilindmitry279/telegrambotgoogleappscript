@@ -53,6 +53,7 @@ Sample script to run Telegram bot serverless in Google App Script.
   - getSystemUser(tg_id) : object {id : number, username : string, firstName : string, lastName : string, isAuth : boolean, isAdmin : boolean}
   - authSystemUser(tg_id, bool_auth, bool_admin) : boolean
   - makeAdmin(tg_id, bool) : boolean
+  - getAdminsID() : array
   - isAuthSystemUser(tg_id) : boolean
   - isAdmin(tg_id) : boolean
 
