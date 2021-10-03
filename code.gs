@@ -212,8 +212,15 @@ function doPost(e) {
       let cbdata = cb.data.split('_');
       let msg = '', msg2 = '';
 
-      if(Bot.isAuthSystemUser(cbdata[1])) {
-        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *completed* before by other admin.";
+      let exist = Bot.getSystemUser(cbdata[1]);
+
+      if(exist && exist.isAuth) {
+        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *approved* before by other admin.";
+        Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
+        return;
+      }
+      else if(!exist) {
+        msg2 = "Request from [" + cbdata[1] + "](tg://user?id=" + cbdata[1] + ") was *denied* before by other admin.";
         Bot.editMessageText(msg2, TelegramJSON.callback_query.message.message_id);
         return;
       }
