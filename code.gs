@@ -55,7 +55,7 @@ function oneTimeSetup() {
 }
 
 function scheduler() {
-  ScriptApp.newTrigger('_scheduleClearTmp').timeBased().everyDays(1).atHour(4).nearMinute(0).inTimezone("Asia/Kuala_Lumpur").create();
+  ScriptApp.newTrigger('_scheduleClearTmp').timeBased().everyDays(1).atHour(4).nearMinute(5).inTimezone("Asia/Kuala_Lumpur").create();
 }
 
 function doGet(e) {
@@ -191,12 +191,17 @@ function doPost(e) {
     }
 
     // forwarded message
-    else if(Bot.isForwardedFrom()) {
+    else if(Bot.isForwarded()) {
       // only super admin can use this action
       if(superAdmin.indexOf(Bot.getUserID()+'') > -1) {
-        let fwd = TelegramJSON.message.forward_from.id;
+        let fwd = Bot.hasForwardedFrom();
+        if(!fwd) {
+          let msg = 'This user has set *Privacy and Security* of *Forwarded Messages* to *Nobody*. I cannot find the ID.';
+          Bot.sendMessage(msg);
+          return;
+        }
 
-        let exist = Bot.getSystemUser(fwd);
+        let exist = Bot.getSystemUser(fwd.id);
         let action, msg;
 
         if(exist && exist.isAdmin) {
@@ -231,6 +236,47 @@ function doPost(e) {
                 "`First Name:` " + exist.firstName + "\n" +
                 "`Last Name :` " + exist.lastName + "\n" +
                 "`Is Admin? :` *" + exist.isAdmin + '*';
+          Bot.sendMessage(msg, options);
+        }
+      }
+      else if(Bot.isAdmin()) {
+        let fwd = Bot.hasForwardedFrom();
+        if(!fwd) {
+          let msg = 'This user has set *Privacy and Security* of *Forwarded Messages* to *Nobody*. I cannot find the ID.';
+          Bot.sendMessage(msg);
+          return;
+        }
+
+        let exist = Bot.getSystemUser(fwd.id);
+        let action, msg, options;
+
+        if(exist && exist.isAdmin) {
+          options = {};
+          action = '\n\n_You cannot do anything because this user is an admin; same level as you._';
+        }
+        else if(exist && exist.isAuth) {
+          options = {
+            'reply_markup': {
+              'inline_keyboard': [
+                [
+                  { 'text': 'Cancel', 'callback_data': 'admin_cancel_' + exist.id },
+                ],
+                [
+                  { 'text': 'Remove this user', 'callback_data': 'admin_deny_' + exist.id },
+                ]
+              ]
+            }
+          };
+          action = '';
+        }
+
+        if(options) {
+          msg = "Information about this user\n\n" +
+                "`ID        :` [" + exist.id + "](" + Bot.mentionByID(exist) + ")\n" +
+                "`Username  :` " + exist.username + "\n" +
+                "`First Name:` " + exist.firstName + "\n" +
+                "`Last Name :` " + exist.lastName + "\n" +
+                "`Is Admin? :` *" + exist.isAdmin + '*' + action;
           Bot.sendMessage(msg, options);
         }
       }
