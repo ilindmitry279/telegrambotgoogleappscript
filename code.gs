@@ -12,7 +12,7 @@ let Bot = Nahfar.createBot(tgBotToken, SSA);
 
 const sheetNames = {
   'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth", "DatetimeAdmin"],
-  'tmp':["UserID", "Step", "Answers", "DateTime"]
+  'tmp': ["UserID", "Step", "Answers", "DateTime"]
 };
 
 const threaded = [
@@ -156,26 +156,10 @@ function doPost(e) {
         }
       }
       else if(text == '/rate') {
-        let options = {
-          'reply_markup': {
-            'keyboard': [
-              [ 
-                { 'text': '⭐️' }, 
-                { 'text': '⭐️⭐️' }
-              ],
-              [ 
-                { 'text': '⭐️⭐️⭐️' }, 
-                { 'text': '⭐️⭐️⭐️⭐️' }
-              ]
-            ],
-            'resize_keyboard': true,
-            'one_time_keyboard': true,
-            'input_field_placeholder': 'Gimme your stars...'
-          }
-        };
-
+        let keyboard = '⭐️,⭐️⭐️;⭐️⭐️⭐️,⭐️⭐️⭐️⭐️';
         let msg = "How do you rate this bot?";
-        Bot.sendMessage(msg, options);
+
+        Bot.sendMessageCustomKeyboard(msg, keyboard, 'Gimme your stars...');
       }
       else if(text == '/ask') {
         Bot.startThreadedConversation(threaded);
