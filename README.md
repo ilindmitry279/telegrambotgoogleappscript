@@ -27,12 +27,28 @@ Sample script to run Telegram bot serverless in Google App Script.
   - getUpdate(telegramdata)
   - request(method, payload)
   - sendMessage(text, options)
+  - sendMessageTo(chatid, text, options)
+  - sendMessageCustomKeyboard(text, keyboard, placeholder, options)
+  - sendMessageCustomKeyboardTo(chatid, text, keyboard, placeholder, options)
   - sendMessageKeyboardRemove(text, options)
-  - sendMessageForceReply(text, options)
+  - sendMessageKeyboardRemoveTo(chatid, text, options)
+  - sendMessageForceReply(text, placeholder, options)
+  - sendMessageForceReplyTo(chatid, text, placeholder, options)
   - sendLocation(latitude, longitude, options)
+  - sendLocationTo(chatid, latitude, longitude, options)
   - sendVenue(latitude, longitude, title, address, options)
-  - sendChatAction(action)
-  - editMessageText(text, message_id, options)
+  - sendVenueTo(chatid, latitude, longitude, title, address, options)
+  - sendChatAction(action, options)
+  - sendChatActionTo(chatid, action, options)
+  - editMessageText(text, messageid, chatid, options)
+
+  - getUserID(obj) : number
+  - mentionByID(obj) : string
+  - getUserFirstName(obj) : string
+  - getUserLastName(obj) : string
+  - getUserFullName(obj) : string
+  - getUsername(obj) : string
+  - getTextMessage() : string
   - isTextMessage() : boolean
   - isMap() : boolean
   - isContact() : boolean
@@ -40,25 +56,20 @@ Sample script to run Telegram bot serverless in Google App Script.
   - isCallbackQuery() : boolean
   - isForwarded() : boolean
   - hasForwardedFrom() : object
-  - mentionByID() : string
-  - getUserFirstName() : string
-  - getUserLastName() : string
-  - getUserFullName() : string
-  - getUsername() : string
-  - getUserID() : number
-  - getTextMessage() : string
-  - startThreadedConversation(conversation_array)
+
+  - startThreadedConversation(array, overwite)
   - userHasThreadedConversation() : object {found : boolean, step : integer, answers : array}
-  - nextMessageInThreadedConversation(conversation_array, step)
-  - endThreadedConversation(conversation_array, step) : array
+  - nextMessageInThreadedConversation(array, step, customtext, overwrite, validateoverwrite)
+  - endThreadedConversation(array, step, overwrite, validateoverwrite) : array
   - cancelThreadedConversation()
-  - addSystemUser(tg_id, bool_auth, bool_admin)
-  - getSystemUser(tg_id) : object {id : number, username : string, firstName : string, lastName : string, isAuth : boolean, isAdmin : boolean}
-  - authSystemUser(tg_id, bool_auth, bool_admin) : boolean
-  - makeAdmin(tg_id, bool) : boolean
+
+  - addSystemUser(tgid, isauth, isadmin)
+  - getSystemUser(tgid) : object {id : number, username : string, firstName : string, lastName : string, isAuth : boolean, isAdmin : boolean}
+  - authSystemUser(tgid, isauth, isadmin) : boolean
+  - makeAdmin(tgid, isadmin) : boolean
   - getAdminsID() : array
-  - isAuthSystemUser(tg_id) : boolean
-  - isAdmin(tg_id) : boolean
+  - isAuthSystemUser(tgid) : boolean
+  - isAdmin(tgid) : boolean
 
 ### Current bot commands
   - /start
