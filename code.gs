@@ -7,13 +7,7 @@ const webAppURL  = 'Your-Web-App-URL';
 // https://github.com/peterherrmann/BetterLog
 let Logger = BetterLog.useSpreadsheet(loggerSheet);
 
-let SSA = SpreadsheetApp.openById(botSheet);
-let Bot = Nahfar.createBot(tgBotToken, SSA);
-
-const sheetNames = {
-  'users': ["DatetimeReq", "UserID", "UserHandler", "First Name", "Last Name", "DatetimeAuth", "DatetimeAdmin"],
-  'tmp': ["UserID", "Step", "Answers", "DateTime"]
-};
+let Bot = Nahfar.createBot(tgBotToken, botSheet);
 
 const threaded = [
   { q: 'Berikan nama penuh anda.' },
@@ -38,24 +32,11 @@ function setWebHook() {
 }
 
 function oneTimeSetup() {
-  for(const key in sheetNames) {
-    let activeSheet = SSA.getSheetByName(key);
-
-    if(activeSheet == null) {
-      activeSheet = SSA.insertSheet().setName(key);
-      activeSheet.appendRow(sheetNames[key]);
-      Logger.log(`Creating sheet ${key}...`);
-    }
-
-    _removeEmptyColumns(key);
-    activeSheet.setFrozenRows(1);    
-    activeSheet.getRange(1, 1, 1, activeSheet.getLastColumn()).setFontWeight("bold");
-  }
-  Logger.log("One time setup is completed!");
+  Bot.settingUpBotSheet();
 }
 
 function scheduler() {
-  ScriptApp.newTrigger('_scheduleClearTmp').timeBased().everyDays(1).atHour(4).nearMinute(5).inTimezone("Asia/Kuala_Lumpur").create();
+  ScriptApp.newTrigger('scheduleClearTmp_').timeBased().everyDays(1).atHour(4).nearMinute(5).inTimezone("Asia/Kuala_Lumpur").create();
 }
 
 function doGet(e) {
@@ -357,17 +338,8 @@ function doPost(e) {
 
 
 /** Util - Start */
-function _removeEmptyColumns(sheetName) {
-  let activeSheet = SSA.getSheetByName(sheetName)
-  let maxColumns = activeSheet.getMaxColumns(); 
-  let lastColumn = activeSheet.getLastColumn();
-
-  if(maxColumns-lastColumn != 0) {
-    activeSheet.deleteColumns(lastColumn+1, maxColumns-lastColumn);
-  }
-}
-
-function _scheduleClearTmp() {
+function scheduleClearTmp_() {
+  let SSA = SpreadsheetApp.openById(botSheet);
   let activeSheet = SSA.getSheetByName('tmp');
 
   let range = activeSheet.getDataRange();
