@@ -35,6 +35,10 @@ function oneTimeSetup() {
   Bot.settingUpBotSheet();
 }
 
+function scheduleClearTmp_() {
+  Bot.cleanUpBotTmpData();
+}
+
 function scheduler() {
   ScriptApp.newTrigger('scheduleClearTmp_').timeBased().everyDays(1).atHour(4).nearMinute(5).inTimezone("Asia/Kuala_Lumpur").create();
 }
@@ -334,29 +338,3 @@ function doPost(e) {
     }
   }
 }
-
-
-
-/** Util - Start */
-function scheduleClearTmp_() {
-  let SSA = SpreadsheetApp.openById(botSheet);
-  let activeSheet = SSA.getSheetByName('tmp');
-
-  let range = activeSheet.getDataRange();
-  let numRows = range.getNumRows();
-  let values = range.getValues();
-
-  let rem = 'X';
-
-  let rowsDeleted = 0;
-  for (let i = 0; i <= numRows - 1; i++) {
-    var row = values[i];
-    if (row[0] == rem || row[0] == '') {
-      activeSheet.deleteRow((parseInt(i)+1) - rowsDeleted);
-      rowsDeleted++;
-    }
-  }
-
-  Logger.log(`Successfully removed ${rowsDeleted} row(s)`);
-}
-/** Util - End */
