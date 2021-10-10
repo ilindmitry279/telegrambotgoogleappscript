@@ -22,6 +22,31 @@ const threaded = [
     w: '_Format nombor kad pengenalan tidak sah. Sila isi sekali lagi._'}
 ];
 
+const menu = [
+  [[{'text': 'About', 'callback_data': 'menu_about'}],
+   [{'text': 'Menu 1', 'callback_data': 'menu_1'},
+    {'text': 'Menu 2', 'callback_data': 'menu_2'}],
+   [{'text': 'Language', 'callback_data': 'menu_3'}]],
+
+  [[{'text': 'Back', 'callback_data': 'menu_0'}],
+   [{'text': 'Profile', 'callback_data': 'menu_profile'}],
+   [{'text': 'Settings', 'callback_data': 'menu_settings'}]],
+
+  [[{'text': 'Back', 'callback_data': 'menu_0'}],
+   [{'text': 'Menu 6', 'callback_data': 'menu_6'},
+    {'text': 'Menu 7', 'callback_data': 'menu_7'},
+    {'text': 'Menu 8', 'callback_data': 'menu_8'}],
+   [{'text': 'Menu 9', 'callback_data': 'menu_9'}]],
+
+  [[{'text': 'Back', 'callback_data': 'menu_0'}],
+   [{'text': '🇬🇧 English', 'callback_data': 'menu_en'},
+    {'text': '🇲🇾 Malay', 'callback_data': 'menu_my'}],
+   [{'text': '🇨🇳 Chinese', 'callback_data': 'menu_cn'},
+    {'text': '🇮🇳 Tamil', 'callback_data': 'menu_in'}],
+   [{'text': '🇯🇵 Japanese', 'callback_data': 'menu_jp'},
+    {'text': '🇷🇺 Russia', 'callback_data': 'menu_ru'}]]
+];
+
 function setWebHook() {
   let payload = {
     url: webAppURL
@@ -146,6 +171,16 @@ function doPost(e) {
 
         Bot.sendMessageCustomKeyboard(msg, keyboard, 'Gimme your stars...');
       }
+      else if(text == '/menu') {
+        let options = {
+          'reply_markup': {
+            'inline_keyboard': menu[0]
+          }
+        };
+
+        msg = "*Menu Option*\n\nSelect any option from the list below.";
+        Bot.sendMessage(msg, options);
+      }
       else if(text == '/ask') {
         Bot.startThreadedConversation(threaded);
       }
@@ -265,13 +300,26 @@ function doPost(e) {
 
     // callback_query
     else if(Bot.isCallbackQuery()) {
-      Bot.request('answerCallbackQuery', { callback_query_id: TelegramJSON.callback_query.id,
-                                           show_alert: true,
-                                           text: 'I will notify the user. Thanks!' });
-
       let cb = TelegramJSON.callback_query;
       let cbdata = cb.data.split('_');
       let msg = '', msg2 = '';
+
+      if(cbdata[0] == 'menu') {
+        if(cbdata[1] < menu.length) {
+          Bot.editMessageReplyMarkup(TelegramJSON.callback_query.message.message_id, null, menu[cbdata[1]]);
+
+          Bot.request('answerCallbackQuery', { callback_query_id: TelegramJSON.callback_query.id });
+        }
+        else {
+          Bot.request('answerCallbackQuery', { callback_query_id: TelegramJSON.callback_query.id,
+                                               text: 'You have clicked menu ' + cbdata[1] });
+        }
+        return;
+      }
+
+      Bot.request('answerCallbackQuery', { callback_query_id: TelegramJSON.callback_query.id,
+                                           show_alert: true,
+                                           text: 'I will notify the user. Thanks!' });
 
       let exist = Bot.getSystemUser(cbdata[2]);
 
