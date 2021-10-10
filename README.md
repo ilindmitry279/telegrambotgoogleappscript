@@ -43,6 +43,7 @@ Sample script to run Telegram bot serverless in Google App Script.
   - sendChatAction(action, options)
   - sendChatActionTo(chatid, action, options)
   - editMessageText(text, messageid, chatid, options)
+  - editMessageReplyMarkup(messageid, chatid, inlinekeyboard, options)
   - getUserID(obj) : _number_
   - mentionByID(obj) : _string_
   - getUserFirstName(obj) : _string_
@@ -76,6 +77,7 @@ Sample script to run Telegram bot serverless in Google App Script.
   - /request
   - /rate
   - /ask
+  - /menu
 
 ### Quota for the Google Apps Script
 | Feature | Consumer and G Suite free edition (legacy) | Google Workspace accounts |
