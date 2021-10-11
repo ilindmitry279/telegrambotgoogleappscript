@@ -44,7 +44,7 @@ const menu = [
    [{'text': '🇨🇳 Chinese', 'callback_data': 'menu_cn'},
     {'text': '🇮🇳 Tamil', 'callback_data': 'menu_in'}],
    [{'text': '🇯🇵 Japanese', 'callback_data': 'menu_jp'},
-    {'text': '🇷🇺 Russia', 'callback_data': 'menu_ru'}]]
+    {'text': '🇷🇺 Russian', 'callback_data': 'menu_ru'}]]
 ];
 
 function setWebHook() {
