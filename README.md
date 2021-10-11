@@ -1,5 +1,5 @@
 # Telegram Bot Using Google App Script
-Sample script to run Telegram bot serverless in Google App Script.
+Sample script to run Telegram bot serverless on Google using Google App Script.
 
 ### Setup
   1. Go to [script.google.com/start](https://script.google.com/start) to open the script editor.
