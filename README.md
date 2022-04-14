@@ -45,6 +45,7 @@ Sample script to run Telegram bot serverless on Google using Google App Script.
   - editMessageText(text, messageid, chatid, options)
   - editMessageReplyMarkup(messageid, chatid, inlinekeyboard, options)
   - getUserID(obj) : _number_
+  - getChatID(obj) : _number_
   - mentionByID(obj) : _string_
   - getUserFirstName(obj) : _string_
   - getUserLastName(obj) : _string_
@@ -57,6 +58,7 @@ Sample script to run Telegram bot serverless on Google using Google App Script.
   - isBotCommand() : _boolean_
   - isCallbackQuery() : _boolean_
   - isForwarded() : _boolean_
+  - isNewChatMember() : _boolean_
   - hasForwardedFrom() : _object_
   - startThreadedConversation(array, overwite)
   - userHasThreadedConversation() : _object {found : boolean, step : integer, answers : array}_
