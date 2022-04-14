@@ -59,6 +59,7 @@ Sample script to run Telegram bot serverless on Google using Google App Script.
   - isCallbackQuery() : _boolean_
   - isForwarded() : _boolean_
   - isNewChatMember() : _boolean_
+  - isChatType(type) : _string_
   - hasForwardedFrom() : _object_
   - startThreadedConversation(array, overwite)
   - userHasThreadedConversation() : _object {found : boolean, step : integer, answers : array}_
