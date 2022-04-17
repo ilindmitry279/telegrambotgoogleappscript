@@ -64,6 +64,7 @@ Sample script to run Telegram bot serverless on Google using Google App Script.
   - isVideo() : _boolean_
   - isMap() : _boolean_
   - isContact() : _boolean_
+  - isGame() : _boolean_
   - isBotCommand() : _boolean_
   - isCallbackQuery() : _boolean_
   - isForwarded() : _boolean_
