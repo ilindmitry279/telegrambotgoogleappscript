@@ -101,6 +101,7 @@ Sample script to run Telegram bot serverless on Google using Google App Script.
 | Custom function runtime | 30 sec / execution | 30 sec / execution |
 | Simultaneous executions | 30 | 30 |
 | Triggers | 20 / user / script | 20 / user / script |
+| Triggers total runtime	| 90 min / day |	6 hr / day |
 | URL Fetch calls | 20,000 / day | 100,000 / day |
 | URL Fetch response size | 50 MB / call | 50 MB / call |
 | URL Fetch headers | 100 / call | 100 / call |
